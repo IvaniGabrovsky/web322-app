@@ -1,8 +1,38 @@
+var fs = require('fs');
+var employees = []; // require("./data/employees.json");
+var departments = []; //require("./data/departments.json");
 
-var employees = require("./data/employees.json");
-var departments = require("./data/departments.json");
+var readEmployee = () => {
+    return new Promise(function (resolve, reject){
+        fs.readFile('./data/employees.json', 'utf8', (err, data) => {
+            if (err) reject("unable to read file");
+            employees = JSON.parse(data);
+            if(employees.length > 0){
+                resolve(employees);
+            }
+            else{
+                reject("no results returned");
+            }
+           });
+    });
+}
 
-function initialize(){
+var readDepartments = () => {
+    return new Promise(function (resolve, reject){
+        fs.readFile('./data/departments.json', 'utf8', (err, data) => {
+            if (err) reject("unable to read file");
+            departments = JSON.parse(data);
+            if(departments.length > 0){
+                resolve(departments);
+            }
+            else{
+                reject("no results returned");
+            }
+           });
+    });
+}
+
+module.exports.initialize = function(){
     fs.readFile('somefile.json', 'utf8', (err, data) => {
         if (err) throw err;
         console.log(data);
@@ -26,11 +56,4 @@ module.exports.getManagers = function(){
     return employees.filter(employee => {
         return employee.isManager;
     });
-}
-
-return new Promise(function(resolve, reject){ // place our code inside a "Promise" function
-    setTimeout(function(){
-        console.log("-");
-        reject("outputA rejected!"); // call "reject" because the function encountered an error
-    },randomTime);
-});   
+} 
