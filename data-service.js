@@ -1,4 +1,5 @@
 var fs = require('fs');
+const { resolve } = require('path');
 var employees = []; // require("./data/employees.json");
 var departments = []; //require("./data/departments.json");
 
@@ -33,27 +34,49 @@ var readDepartments = () => {
 }
 
 module.exports.initialize = function(){
-    fs.readFile('somefile.json', 'utf8', (err, data) => {
-        if (err) throw err;
-        console.log(data);
+    return new Promise((resolve, reject) => {
+        readEmployee()
+        .then(readDepartments)
+        .then(() => resolve())
+        .catch(() => reject())
     });
-    const objOfEmployees = JSON.parse(employees);
-    app.get("./data/departments.json", function(req,res){
-        res.send("Hello World<br /><a href='/about'>Go to the about page</a>");
-    });
-    
 }
 
-module.exports.getEmployees = function(){
-    return employees;
+module.exports.getAllEmployees = function(){
+    return new Promise((resolve, reject) => {
+        if(employees && employees.length > 0){
+            resolve(employees);
+        }
+        else{
+            reject("no results returned");
+        }
+    });
 }
 
 module.exports.getDepartments = function(){
-    return departments;
+    return new Promise((resolve, reject) => {
+        if(departments && departments.length > 0){
+            resolve(departments);
+        }
+        else{
+            reject("no results returned");
+        }
+    });
 }
 
 module.exports.getManagers = function(){
-    return employees.filter(employee => {
-        return employee.isManager;
+    return new Promise((resolve, reject) => {
+        if(employees && employees.length > 0){
+            const managers = employees.filter(employee => employee.isManager);
+            if(managers && managers.length > 0){
+                resolve(managers);
+            }
+            else{
+                reject("no results returned");
+            }
+        }
+        else{
+            reject("no results returned");
+        }
     });
 } 

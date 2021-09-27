@@ -1,3 +1,4 @@
+const { response } = require("express");
 var express = require("express");
 var path = require("path");
 var dataService = require("./data-service.js");
@@ -24,27 +25,23 @@ app.get("/about", function(req,res){
 
 // setup a 'route' to listen on /employees
 app.get("/employees", function(req,res){
-    // dataForService.getAllEmployees().then((data) => {
-    //     res.json(data);
-    // })
-    res.json(dataService.getEmployees());
+    dataService.getAllEmployees()
+    .then((employees) => res.json(employees))
+    .catch(() => res.status(404))
 });
 
 // setup a 'route' to listen on /managers
 app.get("/managers", function(req,res){
-    //res.send("TODO: get all employees who have isManager==true");
-    // dataForService.getManagers().then((data) => {
-    //     res.json(data);
-    // })
-    res.json(dataService.getManagers());
+    dataService.getManagers()
+    .then((managers) => res.json(managers))
+    .catch(() => res.status(404))
 });
 
 // setup a 'route' to listen on /departments
 app.get("/departments", function(req,res){
-    // dataForService.getDepartments().then((data) => {
-    //     res.json(data);
-    // })
-    res.json(dataService.getDepartments());
+    dataService.getDepartments()
+    .then((departments) => res.json(departments))
+    .catch(() => res.status(404))
 });
 
 app.get('*', function(req, res){
@@ -52,4 +49,10 @@ app.get('*', function(req, res){
   });
 
 // setup http server to listen on HTTP_PORT
-app.listen(HTTP_PORT, onHttpStart);
+dataService.initialize()
+.then(() => {
+    app.listen(HTTP_PORT, onHttpStart);
+})
+.catch((err) => {
+    console.error(err);
+});
