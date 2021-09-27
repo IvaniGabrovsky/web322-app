@@ -4,7 +4,7 @@ var path = require("path");
 var dataService = require("./data-service.js");
 var app = express();
 
-var HTTP_PORT = process.env.PORT || 8081;
+var HTTP_PORT = process.env.PORT || 8080;
 
 // call this function after the http server starts listening for requests
 function onHttpStart() {
