@@ -1,6 +1,6 @@
 var express = require("express");
 var path = require("path");
-var dataForService = require("./data-service.js");
+var dataService = require("./data-service.js");
 var app = express();
 
 var HTTP_PORT = process.env.PORT || 8081;
@@ -24,24 +24,32 @@ app.get("/about", function(req,res){
 
 // setup a 'route' to listen on /employees
 app.get("/employees", function(req,res){
-    dataForService.getAllEmployees().then((data) => {
-        res.json(data);
-    })
+    // dataForService.getAllEmployees().then((data) => {
+    //     res.json(data);
+    // })
+    res.json(dataService.getEmployees());
 });
 
 // setup a 'route' to listen on /managers
-app.get("/employees", function(req,res){
-    dataForService.getManagers().then((data) => {
-        res.json(data);
-    })
+app.get("/managers", function(req,res){
+    //res.send("TODO: get all employees who have isManager==true");
+    // dataForService.getManagers().then((data) => {
+    //     res.json(data);
+    // })
+    res.json(dataService.getManagers());
 });
 
 // setup a 'route' to listen on /departments
 app.get("/departments", function(req,res){
-    dataForService.getDepartments().then((data) => {
-        res.json(data);
-    })
+    // dataForService.getDepartments().then((data) => {
+    //     res.json(data);
+    // })
+    res.json(dataService.getDepartments());
 });
+
+app.get('*', function(req, res){
+    res.status(404).sendFile(path.join(__dirname,"/views/404.html"));
+  });
 
 // setup http server to listen on HTTP_PORT
 app.listen(HTTP_PORT, onHttpStart);
