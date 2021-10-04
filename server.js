@@ -13,6 +13,7 @@
 const { response } = require("express");
 var express = require("express");
 var multer = require("multer");
+var fs = require("fs");
 var path = require("path");
 var dataService = require("./data-service.js");
 var app = express();
@@ -88,9 +89,13 @@ app.get("/images/add", function(req,res){
     res.sendFile(path.join(__dirname,"/views/addImage.html"));
 });
 
-app.post("/images/add", function(req,res){
-    // upload.single("imageFile");
-    res.sendFile(path.join(__dirname,"/images"));
+app.post("/images/add", upload.single("imageFile"), (req, res) => {
+    res.send("/images");
+});
+
+app.get("/images", function(req,res){
+    //res.sendFile(path.join(__dirname,"/views/addImage.html"));
+    res.json();
 });
 
 app.get('*', function(req, res){
