@@ -101,6 +101,18 @@ app.get("/images", function(req,res){
     });
 });
 
+app.use(express.urlencoded({ extended: true }));
+
+app.post("/employees/add", (req, res) => {
+    dataService.addEmployee(req.body)
+    .then(() => {
+        res.redirect("/employees");
+    })
+    .catch((err) => {
+        console.error(err);
+    });
+});
+
 app.get('*', function(req, res){
     res.status(404).sendFile(path.join(__dirname,"/views/404.html"));
   });

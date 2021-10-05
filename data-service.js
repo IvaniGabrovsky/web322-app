@@ -80,3 +80,17 @@ module.exports.getManagers = function(){
         }
     });
 } 
+
+module.exports.addEmployee = function(employeeData){
+    return new Promise((resolve, reject) => {
+        if(!employeeData.isManager){
+            employeeData.isManager = false;
+        }
+        else{
+            employeeData.isManager = true;
+        }
+        employeeData.employeeNum = employees.length+1;
+        employees.push(employeeData);
+        resolve();
+    });
+}
