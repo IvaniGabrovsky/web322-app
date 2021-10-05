@@ -19,6 +19,7 @@ var dataService = require("./data-service.js");
 var app = express();
 
 var HTTP_PORT = process.env.PORT || 8080;
+var IMAGES_PATH = "./public/images/uploaded";
 
 // call this function after the http server starts listening for requests
 function onHttpStart() {
@@ -70,7 +71,7 @@ dataService.initialize()
 // multer requires a few options to be setup to store files with file extensions
 // by default it won't store extensions for security reasons
 const storage = multer.diskStorage({
-    destination: "./public/images/uploaded",
+    destination: IMAGES_PATH,
     filename: function (req, file, cb) {
         cb(null, Date.now() + path.extname(file.originalname));
         }
@@ -94,8 +95,10 @@ app.post("/images/add", upload.single("imageFile"), (req, res) => {
 });
 
 app.get("/images", function(req,res){
-    //res.sendFile(path.join(__dirname,"/views/addImage.html"));
-    res.json();
+    fs.readdir(IMAGES_PATH, function(err, items) {
+        console.log(items);
+        res.json(items);
+    });
 });
 
 app.get('*', function(req, res){
