@@ -94,3 +94,72 @@ module.exports.addEmployee = function(employeeData){
         resolve();
     });
 }
+
+module.exports.getEmployeesByStatus = function(status){
+    return new Promise((resolve, reject) => {
+        if(employees && employees.length > 0){
+            const fullTimeEmployees = employees.filter(employee => employee.status == status);
+            if(fullTimeEmployees && fullTimeEmployees.length > 0){
+                resolve(fullTimeEmployees);
+            }
+            else{
+                reject("no results returned");
+            }
+        }
+        else{
+            reject("no results returned");
+        }
+    });
+}
+
+module.exports.getEmployeesByDepartment = function(department){
+    return new Promise((resolve, reject) => {
+        if(employees && employees.length > 0){
+            const departmentsFound = employees.filter(employee => employee.department == department);
+            if(departmentsFound && departmentsFound.length > 0){
+                resolve(departmentsFound);
+            }
+            else{
+                reject("no results returned");
+            }
+        }
+        else{
+            reject("no results returned");
+        }
+    });
+}
+
+module.exports.getEmployeesByManager = function(employeeManagerNum){
+    return new Promise((resolve, reject) => {
+        if(employees && employees.length > 0){
+            const employeesFound = employees.filter(employee => employee.employeeManagerNum == employeeManagerNum);
+            if(employeesFound && employeesFound.length > 0){
+                resolve(employeesFound);
+            }
+            else{
+                reject("no results returned");
+            }
+        }
+        else{
+            reject("no results returned");
+        }
+    });
+}
+
+module.exports.getEmployeeByNum = function(employeeNum){
+    return new Promise((resolve, reject) => {
+        if(employees && employees.length > 0){
+            const employeeFound = employees.find(employee => employee.employeeNum == employeeNum);
+            if(employeeFound){
+                resolve(employeeFound);
+            }
+            else{
+                reject("no results returned");
+            }
+        }
+        else{
+            reject("no results returned");
+        }
+    });
+}
+

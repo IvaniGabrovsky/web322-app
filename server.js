@@ -1,10 +1,10 @@
 /*********************************************************************************
-* WEB322 – Assignment 02
+* WEB322 – Assignment 03
 * I declare that this assignment is my own work in accordance with Seneca Academic Policy. No part
 * of this assignment has been copied manually or electronically from any other source
 * (including 3rd party web sites) or distributed to other students.
 *
-* Name: Ivan Gabrovsky Student ID: 153658190 Date: Mon, Sep 27, 2021
+* Name: Ivan Gabrovsky Student ID: 153658190 Date: Tue, Oct 12, 2021
 *
 * Online (Heroku) Link: https://git.heroku.com/rocky-sea-19016.git
 *
@@ -40,9 +40,33 @@ app.get("/about", function(req,res){
 
 // setup a 'route' to listen on /employees
 app.get("/employees", function(req,res){
-    dataService.getAllEmployees()
-    .then((employees) => res.json(employees))
-    .catch(() => res.status(404))
+    var status = req.query.status;
+    var department = req.query.department;
+    var manager = req.query.manager;
+    if(status){
+        dataService.getEmployeesByStatus(status)
+        .then((employees) => {
+            res.json(employees);
+        }).catch(() => res.status(404));
+    }
+    else if(department){
+        dataService.getEmployeesByDepartment(department)
+        .then((employees) => {
+            res.json(employees);
+        }).catch(() => res.status(404));
+    }
+    else if(manager){
+        dataService.getEmployeesByManager(manager)
+        .then((employees) => {
+            res.json(employees);
+        }).catch(() => res.status(404));
+    }
+    else{
+        dataService.getAllEmployees()
+        .then((employees) => {
+            res.json(employees)
+        })
+    }
 });
 
 // setup a 'route' to listen on /managers
@@ -50,6 +74,13 @@ app.get("/managers", function(req,res){
     dataService.getManagers()
     .then((managers) => res.json(managers))
     .catch(() => res.status(404))
+});
+
+// setup a 'route' to listen on /employee/value
+app.get("/employee/:value", function(req,res){
+    dataService.getEmployeeByNum(req.params.value)
+    .then((employee) => res.json(employee))
+    .catch(() => res.status(404).send("Not Found"))
 });
 
 // setup a 'route' to listen on /departments
