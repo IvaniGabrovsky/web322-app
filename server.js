@@ -12,11 +12,12 @@
 
 const { response } = require("express");
 var express = require("express");
+var app = express();
 var multer = require("multer");
 var fs = require("fs");
 var path = require("path");
 var dataService = require("./data-service.js");
-var app = express();
+app.locals.title = "Assignment 3";
 
 var HTTP_PORT = process.env.PORT || 8080;
 var IMAGES_PATH = "./public/images/uploaded";
@@ -144,6 +145,7 @@ app.post("/employees/add", (req, res) => {
     });
 });
 
-app.get('*', function(req, res){
-    res.status(404).sendFile(path.join(__dirname,"/views/404.html"));
-  });
+app.use((req, res) => {
+    res.status(404).send("Page Not Found");
+})
+
