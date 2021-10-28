@@ -1,21 +1,18 @@
 /*********************************************************************************
-* WEB322 – Assignment 04
+* WEB322 – Assignment 03
 * I declare that this assignment is my own work in accordance with Seneca Academic Policy. No part
 * of this assignment has been copied manually or electronically from any other source
 * (including 3rd party web sites) or distributed to other students.
 *
-* Name: Ivan Gabrovsky Student ID: 153658190 Date: Wed, Oct 27, 2021
+* Name: Ivan Gabrovsky Student ID: 153658190 Date: Tue, Oct 12, 2021
 *
-* Online (Heroku) Link: https://young-waters-32224.herokuapp.com/
+* Online (Heroku) Link: https://git.heroku.com/rocky-sea-19016.git
 *
 ********************************************************************************/
 
 const { response } = require("express");
 var express = require("express");
 var app = express();
-const exphbs = require('express-handlebars');
-app.engine('.hbs', exphbs({ extname: '.hbs' }));
-app.set('view engine', '.hbs');
 var multer = require("multer");
 var fs = require("fs");
 var path = require("path");
@@ -29,29 +26,6 @@ var IMAGES_PATH = "./public/images/uploaded";
 function onHttpStart() {
   console.log("Express http server listening on: " + HTTP_PORT);
 }
-
-// Register handlebars as the rendering engine for views
-app.engine(".hbs", exphbs({ extname: ".hbs" }));
-app.set("view engine", ".hbs");
-
-app.get("/viewData", function(req,res){
-
-    var someData = {
-        name: "John",
-        age: 23,
-        occupation: "developer",
-        company: "Scotiabank"
-    };
-
-    res.render('viewData', {
-        data: someData,
-        layout: false // do not use the default Layout (main.hbs)
-    });
-
-});
-
-// start the server to listen on HTTP_PORT
-app.listen(HTTP_PORT, onHttpStart);
 
 app.use(express.static('public'));
 
