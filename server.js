@@ -32,6 +32,38 @@ function onHttpStart() {
 
 app.use(express.static('public'));
 
+app.use(function(req, res,next){
+    let route = req.baseUrl + req.path;
+    app.locals.activeRoute = (route == "/") ? "/" : route.replace(/\/$/, "");
+    next();
+});
+
+app.engine('.hbs', exphbs({ 
+    extname: '.hbs',
+    helpers: { 
+        navLink: function(url, options){
+            return '<li' +
+            ((url == app.locals.activeRoute) ? ' class="active" ' : '') + 
+            '><a href="' + url + '">' + options.fn(this) + '</a></li>';
+        }
+    }
+}));
+
+app.engine('.hbs', exphbs({ 
+    extname: '.hbs',
+    helpers: { 
+        equal: function (lvalue, rvalue, options) {
+            if (arguments.length < 3)
+                throw new Error("Handlebars Helper equal needs 2 parameters");
+            if (lvalue != rvalue) {
+                return options.inverse(this);
+            } else {
+                return options.fn(this);
+            }
+        }
+    }
+}))
+
 // setup a 'route' to listen on the default url path (http://localhost)
 app.get("/", function(req,res){
     res.render('home');
