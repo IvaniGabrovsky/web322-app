@@ -1,10 +1,10 @@
 /*********************************************************************************
-* WEB322 – Assignment 03
+* WEB322 – Assignment 04
 * I declare that this assignment is my own work in accordance with Seneca Academic Policy. No part
 * of this assignment has been copied manually or electronically from any other source
 * (including 3rd party web sites) or distributed to other students.
 *
-* Name: Ivan Gabrovsky Student ID: 153658190 Date: Tue, Oct 12, 2021
+* Name: Ivan Gabrovsky Student ID: 153658190 Date: Thu, Oct 28, 2021
 *
 * Online (Heroku) Link: https://git.heroku.com/rocky-sea-19016.git
 *
@@ -13,6 +13,9 @@
 const { response } = require("express");
 var express = require("express");
 var app = express();
+const exphbs = require('express-handlebars');
+app.engine('.hbs', exphbs({ extname: '.hbs' }));
+app.set('view engine', '.hbs');
 var multer = require("multer");
 var fs = require("fs");
 var path = require("path");
@@ -31,12 +34,12 @@ app.use(express.static('public'));
 
 // setup a 'route' to listen on the default url path (http://localhost)
 app.get("/", function(req,res){
-    res.sendFile(path.join(__dirname,"/views/home.html"));
+    res.render('home');
 });
 
 // setup another route to listen on /about
 app.get("/about", function(req,res){
-    res.sendFile(path.join(__dirname,"/views/about.html"));
+    res.render('about');
 });
 
 // setup a 'route' to listen on /employees
@@ -114,12 +117,12 @@ const storage = multer.diskStorage({
 
 // setup another route to listen on /about
 app.get("/employees/add", function(req,res){
-    res.sendFile(path.join(__dirname,"/views/addEmployee.html"));
+    res.render('addEmployee');
 });
 
 // setup another route to listen on /about
 app.get("/images/add", function(req,res){
-    res.sendFile(path.join(__dirname,"/views/addImage.html"));
+    res.render('addImage');
 });
 
 app.post("/images/add", upload.single("imageFile"), (req, res) => {
