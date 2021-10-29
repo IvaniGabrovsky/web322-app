@@ -38,7 +38,8 @@ app.use(function(req, res,next){
     next();
 });
 
-app.engine('.hbs', exphbs({ 
+app.engine('.hbs', exphbs({
+    defaultLayout: 'main', 
     extname: '.hbs',
     helpers: { 
         navLink: function(url, options){
@@ -49,7 +50,8 @@ app.engine('.hbs', exphbs({
     }
 }));
 
-app.engine('.hbs', exphbs({ 
+app.engine('.hbs', exphbs({
+    defaultLayout: 'main', 
     extname: '.hbs',
     helpers: { 
         equal: function (lvalue, rvalue, options) {
@@ -103,13 +105,6 @@ app.get("/employees", function(req,res){
             res.json(employees)
         })
     }
-});
-
-// setup a 'route' to listen on /managers
-app.get("/managers", function(req,res){
-    dataService.getManagers()
-    .then((managers) => res.json(managers))
-    .catch(() => res.status(404))
 });
 
 // setup a 'route' to listen on /employee/value
