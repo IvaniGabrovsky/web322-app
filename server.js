@@ -77,19 +77,19 @@ app.get("/employees", function(req,res){
     if(status){
         dataService.getEmployeesByStatus(status)
         .then((employees) => {
-            res.render("employees", {employees: employees})
+            res.render("employees", {employees: data})
         }).catch(() => res.status(404));
     }
     else if(department){
         dataService.getEmployeesByDepartment(department)
         .then((employees) => {
-            res.render("employees", {employees: employees})
+            res.render("employees", {employees: data})
         }).catch(() => res.status(404));
     }
     else if(manager){
         dataService.getEmployeesByManager(manager)
         .then((employees) => {
-            res.render("employees", {employees: employees})
+            res.render("employees", {employees: data})
         }).catch(() => res.status(404));
     }
     else{
@@ -103,7 +103,7 @@ app.get("/employees", function(req,res){
 // setup a 'route' to listen on /employee/value
 app.get("/employee/:value", function(req,res){
     dataService.getEmployeeByNum(req.params.value)
-    .then((employee) => res.json(employee))
+    .then((employee) => res.render("employees", {employees: employees}))
     .catch(() => res.render("employees", {message: "no results"}))
 });
 

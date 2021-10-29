@@ -2,10 +2,9 @@
  <div class="col-md-12">
  <h2>Employees</h2>
  <hr />
-    <p>
+    
         {{# each employees}}
-            res.render(firstName, lastName);
+            <p>{{this.firstName}} {{this.lastName}}</p>
         {{/each}}
-    </p>
  </div>
 </div>
