@@ -152,7 +152,7 @@ app.post("/images/add", upload.single("imageFile"), (req, res) => {
 app.get("/images", function(req,res){
     fs.readdir(IMAGES_PATH, function(err, items) {
         console.log(items);
-        res.render("images", items);
+        res.render("images", { items });
     });
 });
 
