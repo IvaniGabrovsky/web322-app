@@ -46,14 +46,7 @@ app.engine('.hbs', exphbs({
             return '<li' +
             ((url == app.locals.activeRoute) ? ' class="active" ' : '') + 
             '><a href="' + url + '">' + options.fn(this) + '</a></li>';
-        }
-    }
-}));
-
-app.engine('.hbs', exphbs({
-    defaultLayout: 'main', 
-    extname: '.hbs',
-    helpers: { 
+        }, 
         equal: function (lvalue, rvalue, options) {
             if (arguments.length < 3)
                 throw new Error("Handlebars Helper equal needs 2 parameters");
@@ -64,7 +57,7 @@ app.engine('.hbs', exphbs({
             }
         }
     }
-}))
+}));
 
 // setup a 'route' to listen on the default url path (http://localhost)
 app.get("/", function(req,res){
