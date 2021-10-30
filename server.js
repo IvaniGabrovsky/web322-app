@@ -77,25 +77,25 @@ app.get("/employees", function(req,res){
     if(status){
         dataService.getEmployeesByStatus(status)
         .then((employees) => {
-            res.render("employees", {employees: data})
+            res.render("employees", {employees})
         }).catch(() => res.status(404));
     }
     else if(department){
         dataService.getEmployeesByDepartment(department)
         .then((employees) => {
-            res.render("employees", {employees: data})
+            res.render("employees", {employees})
         }).catch(() => res.status(404));
     }
     else if(manager){
         dataService.getEmployeesByManager(manager)
         .then((employees) => {
-            res.render("employees", {employees: data})
+            res.render("employees", {employees})
         }).catch(() => res.status(404));
     }
     else{
         dataService.getAllEmployees()
         .then((employees) => {
-            res.render("employees", {employees: employees})
+            res.render("employees", {employees})
         })
     }
 });
