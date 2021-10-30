@@ -110,7 +110,7 @@ app.get("/employee/:value", function(req,res){
 // setup a 'route' to listen on /departments
 app.get("/departments", function(req,res){
     dataService.getDepartments()
-    .then((departments) => res.json(departments))
+    .then((departments) =>  res.render("departments", {departments: departments}))
     .catch(() => res.status(404))
 });
 
