@@ -103,8 +103,12 @@ app.get("/employees", function(req,res){
 // setup a 'route' to listen on /employee/value
 app.get("/employee/:value", function(req,res){
     dataService.getEmployeeByNum(req.params.value)
-    .then((employee) => res.render("employees", {employees: employees}))
-    .catch(() => res.render("employees", {message: "no results"}))
+    .then((employee) => 
+        res.render("employee", {employee: employee})
+    )
+    .catch(() => 
+        res.render("employee", {message: "no results"})
+    )
 });
 
 // setup a 'route' to listen on /departments
