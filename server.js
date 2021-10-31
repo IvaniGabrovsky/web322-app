@@ -14,12 +14,14 @@ const { response } = require("express");
 var express = require("express");
 var app = express();
 const exphbs = require('express-handlebars');
-app.engine('.hbs', exphbs({ extname: '.hbs' }));
-app.set('view engine', '.hbs');
 var multer = require("multer");
 var fs = require("fs");
 var path = require("path");
 var dataService = require("./data-service.js");
+
+app.engine('.hbs', exphbs({ extname: '.hbs' }));
+app.set('view engine', '.hbs');
+
 app.locals.title = "Assignment 3";
 
 const HTTP_PORT = process.env.PORT || 8080;
@@ -28,7 +30,7 @@ const NO_RESULTS = { message: "no results" };
 
 // call this function after the http server starts listening for requests
 function onHttpStart() {
-  console.log("Express http server listening on: " + HTTP_PORT);
+    console.log("Express http server listening on: " + HTTP_PORT);
 }
 
 app.use(express.static('public'));
@@ -141,10 +143,10 @@ const storage = multer.diskStorage({
     filename: function (req, file, cb) {
         cb(null, Date.now() + path.extname(file.originalname));
         }
-  });
-  
+});
+
   // tell multer to use the diskStorage function for naming files instead of the default.
-  const upload = multer({ storage: storage });
+const upload = multer({ storage: storage });
 
 // setup another route to listen on /about
 app.get("/employees/add", function(req,res){
