@@ -22,8 +22,9 @@ var path = require("path");
 var dataService = require("./data-service.js");
 app.locals.title = "Assignment 3";
 
-var HTTP_PORT = process.env.PORT || 8080;
-var IMAGES_PATH = "./public/images/uploaded";
+const HTTP_PORT = process.env.PORT || 8080;
+const IMAGES_PATH = "./public/images/uploaded";
+const NO_RESULTS = { message: "no results" };
 
 // call this function after the http server starts listening for requests
 function onHttpStart() {
@@ -78,19 +79,25 @@ app.get("/employees", function(req,res){
         dataService.getEmployeesByStatus(status)
         .then((employees) => {
             res.render("employees", {employees})
-        }).catch(() => res.status(404));
+        }).catch(() => {
+            res.render("employees", NO_RESULTS)
+        });
     }
     else if(department){
         dataService.getEmployeesByDepartment(department)
         .then((employees) => {
             res.render("employees", {employees})
-        }).catch(() => res.status(404));
+        }).catch(() => {
+            res.render("employees", NO_RESULTS)
+        });
     }
     else if(manager){
         dataService.getEmployeesByManager(manager)
         .then((employees) => {
             res.render("employees", {employees})
-        }).catch(() => res.status(404));
+        }).catch(() => {
+            res.render("employees", NO_RESULTS)
+        });
     }
     else{
         dataService.getAllEmployees()
@@ -107,7 +114,7 @@ app.get("/employee/:value", function(req,res){
         res.render("employee", {employee: employee})
     )
     .catch(() => 
-        res.render("employee", {message: "no results"})
+        res.render("employee", NO_RESULTS)
     )
 });
 
