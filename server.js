@@ -164,7 +164,6 @@ app.post("/images/add", upload.single("imageFile"), (req, res) => {
 
 app.get("/images", function(req,res){
     fs.readdir(IMAGES_PATH, function(err, items) {
-        console.log(items);
         res.render("images", { items });
     });
 });
@@ -182,7 +181,6 @@ app.post("/employees/add", (req, res) => {
 });
 
 app.post("/employee/update", (req, res) => {
-    console.log(req.body);
     dataService.updateEmployee(req.body)
     .then(() => {
         res.redirect("/employees");
