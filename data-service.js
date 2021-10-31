@@ -163,3 +163,33 @@ module.exports.getEmployeeByNum = function(employeeNum){
     });
 }
 
+module.exports.updateEmployee = function(employeeData){
+    const {employeeNum} = employeeData;
+    return new Promise((resolve, reject) => {
+        if(employees && employees.length > 0){
+            var employeeFound = employees.find(employee => employee.employeeNum == employeeNum);
+            if(employeeFound){
+                employeeFound.firstName = employeeData.firstName;
+                employeeFound.lastName = employeeData.lastName;
+                employeeFound.email = employeeData.email;
+                employeeFound.addressStreet = employeeData.addressStreet;
+                employeeFound.addressCity = employeeData.addressCity;
+                employeeFound.addressState = employeeData.addressState;
+                employeeFound.addressPostal = employeeData.addressPostal;
+                employeeFound.isManager = !!employeeData.isManager;
+                employeeFound.employeeManagerNum = employeeData.employeeManagerNum;
+                employeeFound.status = employeeData.status;
+                employeeFound.department = employeeData.department;
+                employeeFound.hireDate = employeeData.hireDate;
+                resolve();
+            }
+            else{
+                reject("no results returned");
+            }
+        }
+        else{
+            reject("no results returned");
+        }
+    });
+}
+
