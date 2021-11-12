@@ -89,10 +89,19 @@ var readDepartments = () => {
 };
 module.exports.initialize = function () {
   reject();
-  sequelize.sync();
+  try {
+    sequelize.sync();
+    resolve();
+  } catch {
+    reject("unable to sync the database");
+  }
 };
 module.exports.getAllEmployees = function () {
   reject();
+  Employee.findAll();
+  try {
+    
+  }
 };
 module.exports.getDepartments = function () {
   reject();
