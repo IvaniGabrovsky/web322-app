@@ -88,7 +88,6 @@ var readDepartments = () => {
   });
 };
 module.exports.initialize = function () {
-  reject();
   try {
     sequelize.sync();
     resolve();
@@ -97,14 +96,20 @@ module.exports.initialize = function () {
   }
 };
 module.exports.getAllEmployees = function () {
-  reject();
-  Employee.findAll();
   try {
-    
+    Employee.findAll();
+    resolve();
+  } catch{
+    reject("no results returned");
   }
 };
 module.exports.getDepartments = function () {
-  reject();
+  try {
+    Department.findAll();
+    resolve();
+  } catch{
+    reject("no results returned");
+  }
 };
 module.exports.getManagers = function () {
   reject();
@@ -113,16 +118,36 @@ module.exports.addEmployee = function (employeeData) {
   reject();
 };
 module.exports.getEmployeesByStatus = function (status) {
-  reject();
+  try{
+    Employee.findAll();
+    resolve();
+  } catch{
+    reject("no results returned");
+  }
 };
 module.exports.getEmployeesByDepartment = function (department) {
-  reject();
+  try{
+    Employee.findAll();
+    resolve();
+  } catch{
+    reject("no results returned");
+  }
 };
 module.exports.getEmployeesByManager = function (employeeManagerNum) {
-  reject();
+  try{
+    Employee.findAll();
+    resolve();
+  } catch{
+    reject("no results returned");
+  }
 };
 module.exports.getEmployeeByNum = function (employeeNum) {
-  reject();
+  try{
+    Employee.findAll();
+    resolve();
+  } catch{
+    reject("no results returned");
+  }
 };
 module.exports.updateEmployee = function (employeeData) {
   reject();
