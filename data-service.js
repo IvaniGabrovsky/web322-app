@@ -74,6 +74,7 @@ var readEmployee = () => {
     });
   });
 };
+
 var readDepartments = () => {
   return new Promise(function (resolve, reject) {
     fs.readFile("./data/departments.json", "utf8", (err, data) => {
@@ -87,68 +88,102 @@ var readDepartments = () => {
     });
   });
 };
+
 module.exports.initialize = function () {
-  try {
-    sequelize.sync();
-    resolve();
-  } catch {
-    reject("unable to sync the database");
-  }
+  return new Promise(function (resolve, reject) {
+    sequelize.sync().then( () => {
+      resolve();
+    }).catch( () => {
+      reject("unable to sync the database");
+    })
+  });
 };
+
 module.exports.getAllEmployees = function () {
-  try {
-    Employee.findAll();
-    resolve();
-  } catch{
-    reject("no results returned");
-  }
+  //console.log("************** data-service.js getAllEmployees************");
+  return new Promise(function (resolve, reject) {
+    Employee.findAll().then( (employees) => {
+      //console.log(employees);
+      const emps = employees.map( employee => {
+        return employee.dataValues
+      });
+      //console.log(emps);
+      resolve(emps);
+    }).catch( () => {
+      reject("unable to sync the database");
+    })
+  });
 };
+
 module.exports.getDepartments = function () {
-  try {
-    Department.findAll();
-    resolve();
-  } catch{
-    reject("no results returned");
-  }
+  return new Promise(function (resolve, reject) {
+    Department.findAll().then( (departments) => {
+      resolve(departments);
+    }).catch( () => {
+      reject("no results returned");
+    })
+  });
 };
+
 module.exports.getManagers = function () {
   reject();
 };
+
 module.exports.addEmployee = function (employeeData) {
-  reject();
+  employeeData.isManager = (employeeData.isManager) ? true : false;
 };
+
 module.exports.getEmployeesByStatus = function (status) {
-  try{
-    Employee.findAll();
-    resolve();
-  } catch{
-    reject("no results returned");
-  }
+  return new Promise(function (resolve, reject){
+    Model.findAll({
+      where: {
+        employee: employee.status
+      }
+    })
+    
+    var statusFound = Employee.findAll().filter(employee => employee.status == status); 
+    statusFound.then( () => {
+      resolve();
+    }).catch( () => {
+      reject("no results returned");
+    })
+  });
 };
+
 module.exports.getEmployeesByDepartment = function (department) {
-  try{
-    Employee.findAll();
-    resolve();
-  } catch{
-    reject("no results returned");
-  }
+  return new Promise(function (resolve, reject){
+    var departmentFound = Employee.findAll().filter(employee => employee.department == department); 
+    if(departmentFound){
+      resolve();
+    }
+    else{
+      reject("no results returned");
+    }  
+  });
 };
+
 module.exports.getEmployeesByManager = function (employeeManagerNum) {
-  try{
-    Employee.findAll();
-    resolve();
-  } catch{
-    reject("no results returned");
-  }
+  return new Promise(function (resolve, reject){
+    var managerNumberFound = Employee.findAll().filter(employee => employee.employeeManagerNum == employeeManagerNum); 
+    if(managerNumberFound){
+      resolve();
+    }
+    else{
+      reject("no results returned");
+    }  
+  });
 };
+
 module.exports.getEmployeeByNum = function (employeeNum) {
-  try{
-    Employee.findAll();
-    resolve();
-  } catch{
-    reject("no results returned");
-  }
+  return new Promise(function (resolve, reject){
+    Employee.findAll().filter( employeeNum => {
+      resolve();
+    }).catch( () => {
+      reject("no results returned");
+    })
+  });
 };
+
 module.exports.updateEmployee = function (employeeData) {
   reject();
 };

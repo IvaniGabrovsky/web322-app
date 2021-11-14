@@ -115,6 +115,8 @@ app.get("/employees", function (req, res) {
       });
   } else {
     dataService.getAllEmployees().then((employees) => {
+      console.log("************** server.js getAllEmployees************");
+      console.log(employees);
       res.render("employees", { employees });
     });
   }
