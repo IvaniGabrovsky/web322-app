@@ -130,7 +130,7 @@ app.get("/employees", function (req, res) {
       });
   } else {
     dataService.getAllEmployees().then((employees) => {
-      if (data.length > 0){
+      if (employees.length > 0){
         res.render("employees", { employees });
       }  
       else{
