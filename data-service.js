@@ -100,14 +100,11 @@ module.exports.initialize = function () {
 };
 
 module.exports.getAllEmployees = function () {
-  //console.log("************** data-service.js getAllEmployees************");
   return new Promise(function (resolve, reject) {
     Employee.findAll().then( (employees) => {
-      //console.log(employees);
       const emps = employees.map( employee => {
         return employee.dataValues
       });
-      //console.log(emps);
       resolve(emps);
     }).catch( () => {
       reject("unable to sync the database");
@@ -118,7 +115,10 @@ module.exports.getAllEmployees = function () {
 module.exports.getDepartments = function () {
   return new Promise(function (resolve, reject) {
     Department.findAll().then( (departments) => {
-      resolve(departments);
+      const departs = departments.map( department => {
+        return department.dataValues
+      });
+      resolve(departs);
     }).catch( () => {
       reject("no results returned");
     })
@@ -135,15 +135,15 @@ module.exports.addEmployee = function (employeeData) {
 
 module.exports.getEmployeesByStatus = function (status) {
   return new Promise(function (resolve, reject){
-    Model.findAll({
+    Employee.findAll({
       where: {
-        employee: employee.status
+        status: status
       }
-    })
-    
-    var statusFound = Employee.findAll().filter(employee => employee.status == status); 
-    statusFound.then( () => {
-      resolve();
+    }).then( (employees) => {
+      const e = employees.map( employee => {
+        return employee.dataValues
+      });
+      resolve(e);
     }).catch( () => {
       reject("no results returned");
     })
