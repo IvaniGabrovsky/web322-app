@@ -90,7 +90,12 @@ app.get("/employees", function (req, res) {
     dataService
       .getEmployeesByStatus(status)
       .then((employees) => {
-        res.render("employees", { employees });
+        if (data.length > 0){
+          res.render("employees", { employees });
+        }  
+        else{
+          res.render("employees",{ message: "no results" });
+        }
       })
       .catch(() => {
         res.render("employees", NO_RESULTS);
@@ -99,7 +104,12 @@ app.get("/employees", function (req, res) {
     dataService
       .getEmployeesByDepartment(department)
       .then((employees) => {
-        res.render("employees", { employees });
+        if (data.length > 0){
+          res.render("employees", { employees });
+        }  
+        else{
+          res.render("employees",{ message: "no results" });
+        }
       })
       .catch(() => {
         res.render("employees", NO_RESULTS);
@@ -108,16 +118,24 @@ app.get("/employees", function (req, res) {
     dataService
       .getEmployeesByManager(manager)
       .then((employees) => {
-        res.render("employees", { employees });
+        if (data.length > 0){
+          res.render("employees", { employees });
+        }  
+        else{
+          res.render("employees",{ message: "no results" });
+        }
       })
       .catch(() => {
         res.render("employees", NO_RESULTS);
       });
   } else {
     dataService.getAllEmployees().then((employees) => {
-      console.log("************** server.js getAllEmployees************");
-      console.log(employees);
-      res.render("employees", { employees });
+      if (data.length > 0){
+        res.render("employees", { employees });
+      }  
+      else{
+        res.render("employees",{ message: "no results" });
+      }
     });
   }
 });
@@ -134,9 +152,14 @@ app.get("/employee/:value", function (req, res) {
 app.get("/departments", function (req, res) {
   dataService
     .getDepartments()
-    .then((departments) =>
-      res.render("departments", { departments: departments })
-    )
+    .then((departments) => {
+      if(data.length > 0){
+        res.render("departments", { departments: departments })
+      }
+      else{
+        res.render("departments",{ message: "no results" });
+      }
+    })
     .catch(() => res.status(404));
 });
 

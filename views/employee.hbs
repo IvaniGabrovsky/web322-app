@@ -3,7 +3,9 @@
     <h2>{{employee.firstName}}
       {{employee.lastName}}
       - Employee:
-      {{employee.employeeNum}}</h2>
+      {{employee.employeeNum}}
+      <a href="/employees/add" class="btn btn-success pull-right">Add New Employee</a>
+      </h2>
     <hr />
     <form method="post" action="/employee/update">
       <input

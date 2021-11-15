@@ -130,7 +130,20 @@ module.exports.getManagers = function () {
 };
 
 module.exports.addEmployee = function (employeeData) {
-  employeeData.isManager = (employeeData.isManager) ? true : false;
+  return new Promise(function (resolve, reject) {
+    employeeData.isManager = (employeeData.isManager) ? true : false;
+    for (const key in employeeData) {
+      if(employeeData[key] === ""){
+        employeeData[key] = null;
+      }
+    }
+    Employee.create()
+    .then((result) => {
+      resolve(result);
+    }).catch(() => {
+      reject("unable to create employee");
+    });
+  });
 };
 
 module.exports.getEmployeesByStatus = function (status) {
@@ -151,33 +164,52 @@ module.exports.getEmployeesByStatus = function (status) {
 };
 
 module.exports.getEmployeesByDepartment = function (department) {
+  //TODO:
   return new Promise(function (resolve, reject){
-    var departmentFound = Employee.findAll().filter(employee => employee.department == department); 
-    if(departmentFound){
-      resolve();
-    }
-    else{
+    Employee.findAll({
+      where: {
+        DepartmentDepartmentId: department
+      }
+    }).then( (employees) => {
+      console.log("*******employee: ", employees);
+      const e = employees.map( employee => {
+        return employee.dataValues
+      });
+      resolve(e);
+    }).catch( () => {
       reject("no results returned");
-    }  
+    }) 
   });
 };
 
 module.exports.getEmployeesByManager = function (employeeManagerNum) {
   return new Promise(function (resolve, reject){
-    var managerNumberFound = Employee.findAll().filter(employee => employee.employeeManagerNum == employeeManagerNum); 
-    if(managerNumberFound){
-      resolve();
-    }
-    else{
+    Employee.findAll({
+      where: {
+        employeeManagerNum: employeeManagerNum
+      }
+    }).then( (employees) => {
+      const e = employees.map( employee => {
+        return employee.dataValues
+      });
+      resolve(e);
+    }).catch( () => {
       reject("no results returned");
-    }  
+    })
   });
 };
 
 module.exports.getEmployeeByNum = function (employeeNum) {
   return new Promise(function (resolve, reject){
-    Employee.findAll().filter( employeeNum => {
-      resolve();
+    Employee.findAll({
+      where: {
+        employeeNum: employeeNum
+      }
+    }).then( (employees) => {
+      const e = employees.map( employee => {
+        return employee.dataValues
+      });
+      resolve(e);
     }).catch( () => {
       reject("no results returned");
     })
@@ -185,5 +217,32 @@ module.exports.getEmployeeByNum = function (employeeNum) {
 };
 
 module.exports.updateEmployee = function (employeeData) {
-  reject();
+  return new Promise(function (resolve, reject){
+    employeeData.isManager = (employeeData.isManager) ? true : false;
+    for (const key in employeeData) {
+      if(employeeData[key] === ""){
+        employeeData[key] = null;
+      }
+    }
+    Employee.update({
+      firstName: employees.firstName,
+      lastName: employees.lastName,
+      email: employees.email,
+      SSN: employees.SSN,
+      addressStreet: employees.addressStreet,
+      addressCity: employees.addressCity,
+      addressState: employees.addressState,
+      addressPostal: employees.addressPostal,
+      maritalStatus: employees.maritalStatus,
+      isManager: employees.maritalStatus,
+      employeeManagerNum: employees.employeeManagerNum,
+      status: employees.department,
+      hireDate: employees.hireDate,
+    })
+    .then((result) => {
+      resolve(result);
+    }).catch(() => {
+      reject("unable to update employee");
+    });
+  });
 };
