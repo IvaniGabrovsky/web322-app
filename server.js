@@ -271,6 +271,10 @@ app.post("/departments/add", (req, res) => {
     });
 });
 
+app.get("/department/update", (req, res) => {
+  res.render("department");
+});
+
 app.post("/department/update", (req, res) => {
   dataService
     .updateDepartment(req.body)
@@ -282,7 +286,7 @@ app.post("/department/update", (req, res) => {
     });
 });
 
-app.get("/departments/:departmentId", function (req, res) {
+app.get("/department/:departmentId", function (req, res) {
   dataService
     .getDepartmentById(req.params.departmentId)
     .then((department) => res.render("department", { department: department }))
