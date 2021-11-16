@@ -34,6 +34,7 @@ var Employee = sequelize.define(
     employeeManagerNum: Sequelize.INTEGER,
     status: Sequelize.STRING,
     hireDate: Sequelize.STRING,
+    departmentId: Sequelize.INTEGER
   },
   {
     createdAt: false, // disable createdAt
@@ -131,16 +132,18 @@ module.exports.getManagers = function () {
 
 module.exports.addEmployee = function (employeeData) {
   return new Promise(function (resolve, reject) {
+    console.log('********************** addEmployee: ', employeeData)
     employeeData.isManager = (employeeData.isManager) ? true : false;
     for (const key in employeeData) {
       if (employeeData[key] === "") {
         employeeData[key] = null;
       }
     }
-    Employee.create()
+    Employee.create({ ...employeeData })
       .then((result) => {
         resolve(result);
-      }).catch(() => {
+      }).catch((e) => {
+        console.error(e)
         reject("unable to create employee");
       });
   });
