@@ -246,3 +246,80 @@ module.exports.updateEmployee = function (employeeData) {
     });
   });
 };
+
+module.exports.addDepartment = function (departmentData) {
+  return new Promise(function (resolve, reject) {
+    departmentData = (departmentData) ? true : false;
+    for (const key in departmentData) {
+      if(departmentData[key] === ""){
+        departmentData[key] = null;
+      }
+    }
+    Department.create()
+    .then((result) => {
+      resolve(result);
+    }).catch(() => {
+      reject("unable to create department");
+    });
+  });
+};
+
+module.exports.updateDepartment = function (departmentData) {
+  return new Promise(function (resolve, reject){
+    departmentData = (departmentData) ? true : false;
+    for (const key in departmentData) {
+      if(departmentData[key] === ""){
+        departmentData[key] = null;
+      }
+    }
+    Department.update({
+      departmentId: departments.departmentId,
+      departmentName: departments.departmentName,
+    })
+    .then((result) => {
+      resolve(result);
+    }).catch(() => {
+      reject("unable to update department");
+    });
+  });
+};
+
+module.exports.getDepartmentById = function (id) {
+  return new Promise(function (resolve, reject){
+    Department.findAll({
+      where: {
+        id: id
+      }
+    }).then( (departments) => {
+      const e = departments.map( department => {
+        return department.dataValues
+      });
+      resolve(e);
+    }).catch( () => {
+      reject("no results returned");
+    })
+  });
+};
+
+module.exports.deleteDepartmentById = function (id) {
+  return new Promise(function (resolve, reject){
+    Department.destroy()({
+      where: {
+        id: id
+      }
+    }).then( (departments) => {
+      departments.map( department => {
+        return department.dataValues
+      });
+      resolve("destroyed");
+    }).catch( () => {
+      reject("was rejected");
+    })
+  });
+};
+
+
+
+
+
+

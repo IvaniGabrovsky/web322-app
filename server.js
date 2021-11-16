@@ -153,7 +153,7 @@ app.get("/departments", function (req, res) {
   dataService
     .getDepartments()
     .then((departments) => {
-      if(data.length > 0){
+      if(departments.length > 0){
         res.render("departments", { departments: departments })
       }
       else{
