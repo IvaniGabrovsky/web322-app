@@ -225,19 +225,21 @@ module.exports.updateEmployee = function (employeeData) {
       }
     }
     Employee.update({
-      firstName: employees.firstName,
-      lastName: employees.lastName,
-      email: employees.email,
-      SSN: employees.SSN,
-      addressStreet: employees.addressStreet,
-      addressCity: employees.addressCity,
-      addressState: employees.addressState,
-      addressPostal: employees.addressPostal,
-      maritalStatus: employees.maritalStatus,
-      isManager: employees.maritalStatus,
-      employeeManagerNum: employees.employeeManagerNum,
-      status: employees.department,
-      hireDate: employees.hireDate,
+      firstName: employeeData.firstName,
+      lastName: employeeData.lastName,
+      email: employeeData.email,
+      SSN: employeeData.SSN,
+      addressStreet: employeeData.addressStreet,
+      addressCity: employeeData.addressCity,
+      addressState: employeeData.addressState,
+      addressPostal: employeeData.addressPostal,
+      maritalStatus: employeeData.maritalStatus,
+      isManager: employeeData.maritalStatus,
+      employeeManagerNum: employeeData.employeeManagerNum,
+      status: employeeData.department,
+      hireDate: employeeData.hireDate,
+    }, {
+      where: { employeeNum: employeeData.employeeNum }
     })
       .then((result) => {
         resolve(result);

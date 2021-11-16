@@ -144,8 +144,8 @@ app.get("/employee/:empNum", (req, res) => {
   // initialize an empty object to store the values
   let viewData = {};
   dataService.getEmployeeByNum(req.params.empNum).then((data) => {
-    if (data) {
-      viewData.employee = data; //store employee data in the "viewData" object as "employee"
+    if (data && data.length > 0) {
+      viewData.employee = data[0]; //store employee data in the "viewData" object as "employee"
     } else {
       viewData.employee = null; // set employee to null if none were returned
     }
@@ -168,7 +168,8 @@ app.get("/employee/:empNum", (req, res) => {
       if (viewData.employee == null) { // if no employee - return an error
         res.status(404).send("Employee Not Found");
       } else {
-        res.render("employee", { viewData: viewData }); // render the "employee" view
+        console.log('********************* Employee viewData: ', viewData)
+        res.render("employee", { viewData }); // render the "employee" view
       }
     });
 });
