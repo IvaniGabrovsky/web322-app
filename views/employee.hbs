@@ -106,10 +106,17 @@
           <div class="col-md-3">
             <div class="form-group">
               <label for="department">Department</label>
-              <select class="form-control" name="department" id="department">
+              <select class="form-control" name="departmentId" id="departmentId">
                 {{#each viewData.departments}}
-                <option value="{{this.departmentId}}" {{#if this.selected}}selected{{/if}}>{{this.departmentName}}
+                {{#if this.selected}}
+                <option value="{{this.departmentId}}" selected>
+                  {{this.departmentName}}
                 </option>
+                {{else}}
+                <option value="{{this.departmentId}}">
+                  {{this.departmentName}}
+                </option>
+                {{/if}}
                 {{/each}}
               </select>
             </div>
