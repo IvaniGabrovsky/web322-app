@@ -225,19 +225,7 @@ module.exports.updateEmployee = function (employeeData) {
       }
     }
     Employee.update({
-      firstName: employeeData.firstName,
-      lastName: employeeData.lastName,
-      email: employeeData.email,
-      SSN: employeeData.SSN,
-      addressStreet: employeeData.addressStreet,
-      addressCity: employeeData.addressCity,
-      addressState: employeeData.addressState,
-      addressPostal: employeeData.addressPostal,
-      maritalStatus: employeeData.maritalStatus,
-      isManager: employeeData.maritalStatus,
-      employeeManagerNum: employeeData.employeeManagerNum,
-      status: employeeData.department,
-      hireDate: employeeData.hireDate,
+      ...employeeData
     }, {
       where: { employeeNum: employeeData.employeeNum }
     })
