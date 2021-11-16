@@ -229,6 +229,16 @@ app.post("/employee/update", (req, res) => {
     });
 });
 
+app.get("/departments/delete/:departmentId", function (req, res) {
+  dataService.deleteDepartmentById(req.params.departmentId)
+    .then(() => {
+      res.redirect("/departments");
+    })
+    .catch(() => {
+      res.status(500).send("Department not found!");
+    });
+});
+
 app.use((req, res) => {
   res.status(404).send("Page Not Found");
 });

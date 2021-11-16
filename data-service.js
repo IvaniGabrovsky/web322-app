@@ -303,16 +303,13 @@ module.exports.getDepartmentById = function (id) {
 
 module.exports.deleteDepartmentById = function (id) {
   return new Promise(function (resolve, reject){
-    Department.destroy()({
+    Department.destroy({
       where: {
-        id: id
+        departmentId: id
       }
-    }).then( (departments) => {
-      departments.map( department => {
-        return department.dataValues
-      });
+    }).then( () => {
       resolve("destroyed");
-    }).catch( () => {
+    }).catch((e) => {
       reject("was rejected");
     })
   });
