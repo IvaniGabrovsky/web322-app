@@ -1,4 +1,8 @@
 const Sequelize = require("sequelize");
+
+/***********************************************/
+// Connection to Database
+/***********************************************/
 var sequelize = new Sequelize(
   "d19sbu7ftmk3b",
   "abztbvbepbyvjs",
@@ -13,6 +17,41 @@ var sequelize = new Sequelize(
   }
 );
 
+/***********************************************/
+// Initilize
+/***********************************************/
+module.exports.initialize = function () {
+  return new Promise(function (resolve, reject) {
+    sequelize.sync().then(() => {
+      resolve();
+    }).catch(() => {
+      reject("unable to sync the database");
+    })
+  });
+};
+
+/***********************************************/
+// Department Model
+/***********************************************/
+var Department = sequelize.define(
+  "Department",
+  {
+    departmentId: {
+      type: Sequelize.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    departmentName: Sequelize.STRING,
+  },
+  {
+    createdAt: false, // disable createdAt
+    updatedAt: false, // disable updatedAt
+  }
+);
+
+/***********************************************/
+// Employee Model
+/***********************************************/
 var Employee = sequelize.define(
   "Employee",
   {
@@ -42,64 +81,11 @@ var Employee = sequelize.define(
   }
 );
 
-var Department = sequelize.define(
-  "Department",
-  {
-    departmentId: {
-      type: Sequelize.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-    },
-    departmentName: Sequelize.STRING,
-  },
-  {
-    createdAt: false, // disable createdAt
-    updatedAt: false, // disable updatedAt
-  }
-);
+Department.hasMany(Employee, { foreignKey: 'departmentId' })
 
-var fs = require("fs");
-const { resolve } = require("path");
-var employees = []; // require("./data/employees.json");
-var departments = []; //require("./data/departments.json");
-var readEmployee = () => {
-  return new Promise(function (resolve, reject) {
-    fs.readFile("./data/employees.json", "utf8", (err, data) => {
-      if (err) reject("unable to read file");
-      employees = JSON.parse(data);
-      if (employees.length > 0) {
-        resolve(employees);
-      } else {
-        reject("no results returned");
-      }
-    });
-  });
-};
-
-var readDepartments = () => {
-  return new Promise(function (resolve, reject) {
-    fs.readFile("./data/departments.json", "utf8", (err, data) => {
-      if (err) reject("unable to read file");
-      departments = JSON.parse(data);
-      if (departments.length > 0) {
-        resolve(departments);
-      } else {
-        reject("no results returned");
-      }
-    });
-  });
-};
-
-module.exports.initialize = function () {
-  return new Promise(function (resolve, reject) {
-    sequelize.sync().then(() => {
-      resolve();
-    }).catch(() => {
-      reject("unable to sync the database");
-    })
-  });
-};
-
+/***********************************************/
+// Employee Functions
+/***********************************************/
 module.exports.getAllEmployees = function () {
   return new Promise(function (resolve, reject) {
     Employee.findAll().then((employees) => {
@@ -113,26 +99,8 @@ module.exports.getAllEmployees = function () {
   });
 };
 
-module.exports.getDepartments = function () {
-  return new Promise(function (resolve, reject) {
-    Department.findAll().then((departments) => {
-      const departs = departments.map(department => {
-        return department.dataValues
-      });
-      resolve(departs);
-    }).catch(() => {
-      reject("no results returned");
-    })
-  });
-};
-
-module.exports.getManagers = function () {
-  reject();
-};
-
 module.exports.addEmployee = function (employeeData) {
   return new Promise(function (resolve, reject) {
-    console.log('********************** addEmployee: ', employeeData)
     employeeData.isManager = (employeeData.isManager) ? true : false;
     for (const key in employeeData) {
       if (employeeData[key] === "") {
@@ -143,7 +111,7 @@ module.exports.addEmployee = function (employeeData) {
       .then((result) => {
         resolve(result);
       }).catch((e) => {
-        console.error(e)
+        console.error(e);
         reject("unable to create employee");
       });
   });
@@ -174,7 +142,6 @@ module.exports.getEmployeesByDepartment = function (department) {
         DepartmentDepartmentId: department
       }
     }).then((employees) => {
-      console.log("*******employee: ", employees);
       const e = employees.map(employee => {
         return employee.dataValues
       });
@@ -240,8 +207,37 @@ module.exports.updateEmployee = function (employeeData) {
   });
 };
 
+module.exports.deleteEmployeeByNum = function (id) {
+  return new Promise(function (resolve, reject) {
+    Employee.destroy({
+      where: {
+        employeeNum: id
+      }
+    }).then(() => {
+      resolve("destroyed");
+    }).catch((e) => {
+      reject("was rejected");
+    })
+  });
+};
+
+/***********************************************/
+// Department Functions
+/***********************************************/
+module.exports.getDepartments = function () {
+  return new Promise(function (resolve, reject) {
+    Department.findAll().then((departments) => {
+      const departs = departments.map(department => {
+        return department.dataValues
+      });
+      resolve(departs);
+    }).catch(() => {
+      reject("no results returned");
+    })
+  });
+};
+
 module.exports.addDepartment = function (departmentData) {
-  console.log(departmentData);
   return new Promise(function (resolve, reject) {
     for (const key in departmentData) {
       if (departmentData[key] === "") {
@@ -308,23 +304,3 @@ module.exports.deleteDepartmentById = function (id) {
     })
   });
 };
-
-module.exports.deleteEmployeeByNum = function (id) {
-  return new Promise(function (resolve, reject) {
-    Employee.destroy({
-      where: {
-        employeeNum: id
-      }
-    }).then(() => {
-      resolve("destroyed");
-    }).catch((e) => {
-      reject("was rejected");
-    })
-  });
-};
-
-
-
-
-
-
