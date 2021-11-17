@@ -290,7 +290,9 @@ app.post("/department/update", (req, res) => {
 app.get("/department/:departmentId", function (req, res) {
   dataService
     .getDepartmentById(req.params.departmentId)
-    .then((department) => res.render("department", { department: department }))
+    .then((department) => {
+      res.render("department", { department: department[0] })
+    })
     .catch(() => res.status(404).send("Department Not Found"));
 });
 

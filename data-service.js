@@ -259,19 +259,19 @@ module.exports.addDepartment = function (departmentData) {
 
 module.exports.updateDepartment = function (departmentData) {
   return new Promise(function (resolve, reject) {
-    departmentData = (departmentData) ? true : false;
     for (const key in departmentData) {
       if (departmentData[key] === "") {
         departmentData[key] = null;
       }
     }
     Department.update({
-      departmentId: departments.departmentId,
-      departmentName: departments.departmentName,
+      ...departmentData
+    }, {
+      where: { departmentId: departmentData.departmentId }
     })
       .then((result) => {
         resolve(result);
-      }).catch(() => {
+      }).catch((e) => {
         reject("unable to update department");
       });
   });
