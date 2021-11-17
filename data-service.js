@@ -309,6 +309,20 @@ module.exports.deleteDepartmentById = function (id) {
   });
 };
 
+module.exports.deleteEmployeeByNum = function (id) {
+  return new Promise(function (resolve, reject) {
+    Employee.destroy({
+      where: {
+        employeeNum: id
+      }
+    }).then(() => {
+      resolve("destroyed");
+    }).catch((e) => {
+      reject("was rejected");
+    })
+  });
+};
+
 
 
 

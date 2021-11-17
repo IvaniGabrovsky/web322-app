@@ -253,6 +253,15 @@ app.post("/employees/add", (req, res) => {
     });
 });
 
+app.get("/employees/delete/:empNum", function (req, res) {
+  dataService.deleteEmployeeByNum(req.params.empNum)
+    .then(() => {
+      res.redirect("/employees");
+    })
+    .catch(() => {
+      res.status(500).send("Employee not found!");
+    });
+});
 
 //**************************************************************************************/
 // Departments
