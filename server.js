@@ -19,20 +19,23 @@ var fs = require("fs");
 var path = require("path");
 var dataService = require("./data-service.js");
 
-app.engine(".hbs", exphbs({ extname: ".hbs" }));
-app.set("view engine", ".hbs");
-
-app.locals.title = "Assignment 5";
 
 const HTTP_PORT = process.env.PORT || 8080;
 const IMAGES_PATH = "./public/images/uploaded";
 const NO_RESULTS = { message: "no results" };
+
+app.engine(".hbs", exphbs({ extname: ".hbs" }));
+app.set("view engine", ".hbs");
+app.locals.title = "Assignment 5";
 
 // call this function after the http server starts listening for requests
 function onHttpStart() {
   console.log("Express http server listening on: " + HTTP_PORT);
 }
 
+//**************************************************************************************/
+// Middleware Configuration
+//**************************************************************************************/
 app.use(express.static("public"));
 
 app.use(function (req, res, next) {
@@ -41,6 +44,11 @@ app.use(function (req, res, next) {
   next();
 });
 
+app.use(express.urlencoded({ extended: true }));
+
+//**************************************************************************************/
+// Handlebar Configuration
+//**************************************************************************************/
 app.engine(
   ".hbs",
   exphbs({
@@ -71,6 +79,33 @@ app.engine(
   })
 );
 
+//**************************************************************************************/
+// Database and multer Configuration
+//**************************************************************************************/
+dataService
+  .initialize()
+  .then(() => {
+    app.listen(HTTP_PORT, onHttpStart);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+
+// multer requires a few options to be setup to store files with file extensions
+// by default it won't store extensions for security reasons
+const storage = multer.diskStorage({
+  destination: IMAGES_PATH,
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
+});
+
+// tell multer to use the diskStorage function for naming files instead of the default.
+const upload = multer({ storage: storage });
+
+//**************************************************************************************/
+// Main and about
+//**************************************************************************************/
 // setup a 'route' to listen on the default url path (http://localhost)
 app.get("/", function (req, res) {
   res.render("home");
@@ -81,6 +116,9 @@ app.get("/about", function (req, res) {
   res.render("about");
 });
 
+//**************************************************************************************/
+// Employees
+//**************************************************************************************/
 // setup a 'route' to listen on /employees
 app.get("/employees", function (req, res) {
   var status = req.query.status;
@@ -140,6 +178,9 @@ app.get("/employees", function (req, res) {
   }
 });
 
+
+
+
 app.get("/employee/:empNum", (req, res) => {
   // initialize an empty object to store the values
   let viewData = {};
@@ -174,7 +215,48 @@ app.get("/employee/:empNum", (req, res) => {
     });
 });
 
+app.post("/employee/update", (req, res) => {
+  dataService
+    .updateEmployee(req.body)
+    .then(() => {
+      res.redirect("/employees");
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+});
 
+
+// setup another route to listen to employees/add
+app.get("/employees/add", function (req, res) {
+  dataService
+    .getDepartments()
+    .then((departments) => {
+      if (departments.length > 0) {
+        res.render("addEmployee", { departments: departments })
+      }
+      else {
+        res.render("addEmployee", { message: "no results" });
+      }
+    })
+    .catch(() => res.status(404));
+});
+
+app.post("/employees/add", (req, res) => {
+  dataService
+    .addEmployee(req.body)
+    .then(() => {
+      res.redirect("/employees");
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+});
+
+
+//**************************************************************************************/
+// Departments
+//**************************************************************************************/
 // setup a 'route' to listen on /departments
 app.get("/departments", function (req, res) {
   dataService
@@ -188,72 +270,6 @@ app.get("/departments", function (req, res) {
       }
     })
     .catch(() => res.status(404));
-});
-
-// setup http server to listen on HTTP_PORT
-dataService
-  .initialize()
-  .then(() => {
-    app.listen(HTTP_PORT, onHttpStart);
-  })
-  .catch((err) => {
-    console.error(err);
-  });
-
-// multer requires a few options to be setup to store files with file extensions
-// by default it won't store extensions for security reasons
-const storage = multer.diskStorage({
-  destination: IMAGES_PATH,
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + path.extname(file.originalname));
-  },
-});
-
-// tell multer to use the diskStorage function for naming files instead of the default.
-const upload = multer({ storage: storage });
-
-// setup another route to listen on /about
-app.get("/employees/add", function (req, res) {
-  res.render("addEmployee");
-});
-
-// setup another route to listen on /about
-app.get("/images/add", function (req, res) {
-  res.render("addImage");
-});
-
-app.post("/images/add", upload.single("imageFile"), (req, res) => {
-  res.redirect("/images");
-});
-
-app.get("/images", function (req, res) {
-  fs.readdir(IMAGES_PATH, function (err, items) {
-    res.render("images", { items });
-  });
-});
-
-app.use(express.urlencoded({ extended: true }));
-
-app.post("/employees/add", (req, res) => {
-  dataService
-    .addEmployee(req.body)
-    .then(() => {
-      res.redirect("/employees");
-    })
-    .catch((err) => {
-      console.error(err);
-    });
-});
-
-app.post("/employee/update", (req, res) => {
-  dataService
-    .updateEmployee(req.body)
-    .then(() => {
-      res.redirect("/employees");
-    })
-    .catch((err) => {
-      console.error(err);
-    });
 });
 
 // setup another route to listen on /about
@@ -306,6 +322,27 @@ app.get("/departments/delete/:departmentId", function (req, res) {
     });
 });
 
+//**************************************************************************************/
+// Images
+//**************************************************************************************/
+// setup another route to listen on /about
+app.get("/images/add", function (req, res) {
+  res.render("addImage");
+});
+
+app.post("/images/add", upload.single("imageFile"), (req, res) => {
+  res.redirect("/images");
+});
+
+app.get("/images", function (req, res) {
+  fs.readdir(IMAGES_PATH, function (err, items) {
+    res.render("images", { items });
+  });
+});
+
+//**************************************************************************************/
+// Error
+//**************************************************************************************/
 app.use((req, res) => {
   res.status(404).send("Page Not Found");
 });
