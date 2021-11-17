@@ -203,7 +203,7 @@ app.get("/employee/:empNum", (req, res) => {
       // the employee's "department" value, add a "selected" property to the matching
       // viewData.departments object
       for (let i = 0; i < viewData.departments.length; i++) {
-        if (viewData.departments[i].departmentId == viewData.employee.department) {
+        if (viewData.departments[i].departmentId == viewData.employee.departmentId) {
           viewData.departments[i].selected = true;
         }
       }
