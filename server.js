@@ -167,14 +167,18 @@ app.get("/employees", function (req, res) {
         res.render("employees", NO_RESULTS);
       });
   } else {
-    dataService.getAllEmployees().then((employees) => {
-      if (employees.length > 0) {
-        res.render("employees", { employees });
-      }
-      else {
-        res.render("employees", { message: "no results" });
-      }
-    });
+    dataService.getAllEmployees()
+      .then((employees) => {
+        if (employees.length > 0) {
+          res.render("employees", { employees });
+        }
+        else {
+          res.render("employees", { message: "no results" });
+        }
+      })
+      .catch(() => {
+        res.render("employees", NO_RESULTS);
+      });
   }
 });
 
