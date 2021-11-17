@@ -241,17 +241,18 @@ module.exports.updateEmployee = function (employeeData) {
 };
 
 module.exports.addDepartment = function (departmentData) {
+  console.log(departmentData);
   return new Promise(function (resolve, reject) {
-    departmentData = (departmentData) ? true : false;
     for (const key in departmentData) {
       if (departmentData[key] === "") {
         departmentData[key] = null;
       }
     }
-    Department.create()
+    Department.create({ ...departmentData })
       .then((result) => {
         resolve(result);
-      }).catch(() => {
+      }).catch((e) => {
+        console.log(e);
         reject("unable to create department");
       });
   });
