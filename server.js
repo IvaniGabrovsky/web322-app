@@ -170,6 +170,7 @@ app.get("/employees", function (req, res) {
     dataService.getAllEmployees()
       .then((employees) => {
         if (employees.length > 0) {
+          // employees.forEach((employee) => console.log(employee))
           res.render("employees", { employees });
         }
         else {
@@ -203,7 +204,8 @@ app.get("/employee/:empNum", (req, res) => {
       // the employee's "department" value, add a "selected" property to the matching
       // viewData.departments object
       for (let i = 0; i < viewData.departments.length; i++) {
-        if (viewData.departments[i].departmentId == viewData.employee.departmentId) {
+        console.log(viewData.departments[i].departmentId, ' = ', viewData.employee.DepartmentDepartmentId)
+        if (viewData.departments[i].departmentId == viewData.employee.DepartmentDepartmentId) {
           viewData.departments[i].selected = true;
         }
       }

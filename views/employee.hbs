@@ -80,7 +80,8 @@
           <div class="col-md-3">
             <div class="form-group">
               <label for="isManager">Manager:</label>
-              <input class="form-control" type="checkbox" id="isManager" name="isManager" checked />
+              <input class="form-control" type="checkbox" id="isManager" name="isManager" {{#if
+                viewData.employee.isManager}} checked {{/if}} />
             </div>
           </div>
           <div class="col-md-3">
@@ -107,7 +108,7 @@
             <div class="form-group">
               <label for="department">Department</label>
               {{#if viewData.departments}}
-              <select class="form-control" name="departmentId" id="departmentId">
+              <select class="form-control" name="DepartmentDepartmentId" id="DepartmentDepartmentId">
                 <option value="">Select Department</option>
                 {{#each viewData.departments}}
                 <option value="{{this.departmentId}}" {{#if this.selected}} selected {{/if}}>{{this.departmentName}}

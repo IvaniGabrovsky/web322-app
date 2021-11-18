@@ -72,8 +72,8 @@ var Employee = sequelize.define(
     isManager: Sequelize.BOOLEAN,
     employeeManagerNum: Sequelize.INTEGER,
     status: Sequelize.STRING,
-    hireDate: Sequelize.STRING,
-    departmentId: Sequelize.INTEGER
+    hireDate: Sequelize.STRING // ,
+    // departmentId: Sequelize.INTEGER
   },
   {
     createdAt: false, // disable createdAt
@@ -81,14 +81,21 @@ var Employee = sequelize.define(
   }
 );
 
-Department.hasMany(Employee, { foreignKey: 'departmentId' })
+//Department.hasMany(Employee, { foreignKey: 'departmentId' })
+Department.hasMany(Employee, { foreignKey: 'DepartmentDepartmentId' })
+Employee.belongsTo(Department);
 
 /***********************************************/
 // Employee Functions
 /***********************************************/
 module.exports.getAllEmployees = function () {
   return new Promise(function (resolve, reject) {
-    Employee.findAll().then((employees) => {
+    Employee.findAll({
+      include: [{
+        model: Department,
+        required: true
+      }]
+    }).then((employees) => {
       const emps = employees.map(employee => {
         return employee.dataValues
       });
