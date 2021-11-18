@@ -208,7 +208,6 @@ app.get("/employee/:empNum", (req, res) => {
       // the employee's "department" value, add a "selected" property to the matching
       // viewData.departments object
       for (let i = 0; i < viewData.departments.length; i++) {
-        // console.log(viewData.departments[i].departmentId, ' = ', viewData.employee.DepartmentDepartmentId)
         if (viewData.departments[i].departmentId == viewData.employee.DepartmentDepartmentId) {
           viewData.departments[i].selected = true;
         }
