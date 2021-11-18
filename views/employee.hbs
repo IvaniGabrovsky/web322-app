@@ -95,11 +95,13 @@
             <div class="form-group">
               <label>Status:</label><br />
               <label class="checkbox-inline">
-                <input type="radio" id="statusFT" name="status" checked value="Full Time" />
+                <input type="radio" id="statusFT" name="status" value="Full Time" {{#if viewData.employee.isFullTime}}
+                  checked {{/if}} />
                 Full Time
               </label>
               <label class="checkbox-inline">
-                <input type="radio" id="statusPT" name="status" value="Part Time" />
+                <input type="radio" id="statusPT" name="status" value="Part Time" {{#unless
+                  viewData.employee.isFullTime}} checked {{/unless}} />
                 Part Time
               </label>
             </div>

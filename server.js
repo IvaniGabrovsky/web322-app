@@ -191,6 +191,11 @@ app.get("/employee/:empNum", (req, res) => {
   dataService.getEmployeeByNum(req.params.empNum).then((data) => {
     if (data && data.length > 0) {
       viewData.employee = data[0]; //store employee data in the "viewData" object as "employee"
+      if (viewData.employee.status == 'Full Time') {
+        viewData.employee.isFullTime = true
+      } else {
+        viewData.employee.isFullTime = false
+      }
     } else {
       viewData.employee = null; // set employee to null if none were returned
     }
