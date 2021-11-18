@@ -129,13 +129,17 @@ module.exports.getEmployeesByStatus = function (status) {
     Employee.findAll({
       where: {
         status: status
-      }
+      },
+      include: [{
+        model: Department,
+        required: true
+      }]
     }).then((employees) => {
       const e = employees.map(employee => {
         return employee.dataValues
       });
       resolve(e);
-    }).catch(() => {
+    }).catch((err) => {
       reject("no results returned");
     })
   });
@@ -147,7 +151,11 @@ module.exports.getEmployeesByDepartment = function (department) {
     Employee.findAll({
       where: {
         DepartmentDepartmentId: department
-      }
+      },
+      include: [{
+        model: Department,
+        required: true
+      }]
     }).then((employees) => {
       const e = employees.map(employee => {
         return employee.dataValues
@@ -164,7 +172,11 @@ module.exports.getEmployeesByManager = function (employeeManagerNum) {
     Employee.findAll({
       where: {
         employeeManagerNum: employeeManagerNum
-      }
+      },
+      include: [{
+        model: Department,
+        required: true
+      }]
     }).then((employees) => {
       const e = employees.map(employee => {
         return employee.dataValues

@@ -128,21 +128,21 @@ app.get("/employees", function (req, res) {
     dataService
       .getEmployeesByStatus(status)
       .then((employees) => {
-        if (data.length > 0) {
+        if (employees.length > 0) {
           res.render("employees", { employees });
         }
         else {
           res.render("employees", { message: "no results" });
         }
       })
-      .catch(() => {
+      .catch((e) => {
         res.render("employees", NO_RESULTS);
       });
   } else if (department) {
     dataService
       .getEmployeesByDepartment(department)
       .then((employees) => {
-        if (data.length > 0) {
+        if (employees.length > 0) {
           res.render("employees", { employees });
         }
         else {
@@ -156,7 +156,7 @@ app.get("/employees", function (req, res) {
     dataService
       .getEmployeesByManager(manager)
       .then((employees) => {
-        if (data.length > 0) {
+        if (employees.length > 0) {
           res.render("employees", { employees });
         }
         else {
@@ -170,7 +170,6 @@ app.get("/employees", function (req, res) {
     dataService.getAllEmployees()
       .then((employees) => {
         if (employees.length > 0) {
-          // employees.forEach((employee) => console.log(employee))
           res.render("employees", { employees });
         }
         else {
@@ -204,7 +203,7 @@ app.get("/employee/:empNum", (req, res) => {
       // the employee's "department" value, add a "selected" property to the matching
       // viewData.departments object
       for (let i = 0; i < viewData.departments.length; i++) {
-        console.log(viewData.departments[i].departmentId, ' = ', viewData.employee.DepartmentDepartmentId)
+        // console.log(viewData.departments[i].departmentId, ' = ', viewData.employee.DepartmentDepartmentId)
         if (viewData.departments[i].departmentId == viewData.employee.DepartmentDepartmentId) {
           viewData.departments[i].selected = true;
         }
@@ -215,7 +214,6 @@ app.get("/employee/:empNum", (req, res) => {
       if (viewData.employee == null) { // if no employee - return an error
         res.status(404).send("Employee Not Found");
       } else {
-        console.log('********************* Employee viewData: ', viewData)
         res.render("employee", { viewData }); // render the "employee" view
       }
     });
