@@ -442,9 +442,7 @@ app.get("/logout", function (req, res) {
 });
 
 app.get("/userHistory", ensureLogin, function (req, res) {
-  res.render(user.loginHistory);
-  req.session.reset();
-  res.redirect("/");
+  res.render("userHistory", { userHistory: req.session.user });
 });
 
 //**************************************************************************************/
