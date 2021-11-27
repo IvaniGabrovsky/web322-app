@@ -397,12 +397,12 @@ app.get("/images", ensureLogin, function (req, res) {
 //**************************************************************************************/
 // Display the login html page
 app.get("/login", function (req, res) {
-  res.render("login", { layout: false });
+  res.render("login");
 });
 
 // Display the register html page
 app.get("/register", function (req, res) {
-  res.render("register", { layout: false });
+  res.render("register");
 });
 
 app.post("/register", function (req, res) {
@@ -432,7 +432,7 @@ app.post("/login", function (req, res) {
       res.redirect("/employees");
     })
     .catch((err) => {
-      res.render("catch", { errorMessage: err, userName: req.body.userName });
+      res.render("login", { errorMessage: err, userName: req.body.userName });
     });
 });
 

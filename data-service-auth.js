@@ -36,10 +36,10 @@ module.exports.registerUser = function (userData) {
     }
     let newUser = new User(userData);
     newUser.save((err) => {
-      if (err === 11000) {
+      if (err && err === 11000) {
         // there was an error
         reject(`User Name already taken`);
-      } else if (err !== 11000) {
+      } else if (err && err !== 11000) {
         // there was an error
         reject(`There was an error creating the user: ${err}`);
       } else if (!err) {
@@ -54,24 +54,28 @@ module.exports.checkUser = function (userData) {
     User.find({ userName: userData.userName })
       .exec()
       .then((users) => {
-        if (!users || users.lenght() === 0) {
+        usersObj = users.map((value) => value.toObject());
+        if (usersObj.length === 0) {
           reject(`Unable to find user: ${userData.userName}`);
-        } else if (users || users[0].password !== userData.password) {
+        } else if (usersObj[0].password.trim() !== userData.password.trim()) {
           reject(`Incorrect Password for user: ${userData.userName}`);
         } else {
           // save to user history
-          users[0].loginHistory.push({
+          if (!usersObj[0].loginHistory) {
+            usersObj[0].loginHistory = [];
+          }
+          usersObj[0].loginHistory.push({
             dateTime: new Date().toString(),
             userAgent: userData.userAgent,
           });
           User.updateOne(
             { userName: userData.userName },
-            { $set: { loginHistory: users[0].loginHistory } }
+            { $set: { loginHistory: usersObj[0].loginHistory } }
           )
             .exec()
             .then(() => {
               // resolve promise
-              resolve(users[0]);
+              resolve(usersObj[0]);
             })
             .catch((err) => {
               reject(`There was an error verifying the user: ${err}`);
@@ -79,6 +83,7 @@ module.exports.checkUser = function (userData) {
         }
       })
       .catch((err) => {
+        console.log(err);
         reject(`Unable to find user: ${userData.userName}`);
       });
   });
