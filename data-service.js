@@ -22,11 +22,14 @@ var sequelize = new Sequelize(
 /***********************************************/
 module.exports.initialize = function () {
   return new Promise(function (resolve, reject) {
-    sequelize.sync().then(() => {
-      resolve();
-    }).catch(() => {
-      reject("unable to sync the database");
-    })
+    sequelize
+      .sync()
+      .then(() => {
+        resolve();
+      })
+      .catch(() => {
+        reject("unable to sync the database");
+      });
   });
 };
 
@@ -72,7 +75,7 @@ var Employee = sequelize.define(
     isManager: Sequelize.BOOLEAN,
     employeeManagerNum: Sequelize.INTEGER,
     status: Sequelize.STRING,
-    hireDate: Sequelize.STRING // ,
+    hireDate: Sequelize.STRING, // ,
     // departmentId: Sequelize.INTEGER
   },
   {
@@ -82,7 +85,7 @@ var Employee = sequelize.define(
 );
 
 //Department.hasMany(Employee, { foreignKey: 'departmentId' })
-Department.hasMany(Employee, { foreignKey: 'DepartmentDepartmentId' })
+Department.hasMany(Employee, { foreignKey: "DepartmentDepartmentId" });
 Employee.belongsTo(Department);
 
 /***********************************************/
@@ -91,24 +94,28 @@ Employee.belongsTo(Department);
 module.exports.getAllEmployees = function () {
   return new Promise(function (resolve, reject) {
     Employee.findAll({
-      include: [{
-        model: Department,
-        required: true
-      }]
-    }).then((employees) => {
-      const emps = employees.map(employee => {
-        return employee.dataValues
-      });
-      resolve(emps);
-    }).catch(() => {
-      reject("unable to sync the database");
+      include: [
+        {
+          model: Department,
+          required: true,
+        },
+      ],
     })
+      .then((employees) => {
+        const emps = employees.map((employee) => {
+          return employee.dataValues;
+        });
+        resolve(emps);
+      })
+      .catch(() => {
+        reject("unable to sync the database");
+      });
   });
 };
 
 module.exports.addEmployee = function (employeeData) {
   return new Promise(function (resolve, reject) {
-    employeeData.isManager = (employeeData.isManager) ? true : false;
+    employeeData.isManager = employeeData.isManager ? true : false;
     for (const key in employeeData) {
       if (employeeData[key] === "") {
         employeeData[key] = null;
@@ -117,7 +124,8 @@ module.exports.addEmployee = function (employeeData) {
     Employee.create({ ...employeeData })
       .then((result) => {
         resolve(result);
-      }).catch((e) => {
+      })
+      .catch((e) => {
         console.error(e);
         reject("unable to create employee");
       });
@@ -128,20 +136,24 @@ module.exports.getEmployeesByStatus = function (status) {
   return new Promise(function (resolve, reject) {
     Employee.findAll({
       where: {
-        status: status
+        status: status,
       },
-      include: [{
-        model: Department,
-        required: true
-      }]
-    }).then((employees) => {
-      const e = employees.map(employee => {
-        return employee.dataValues
-      });
-      resolve(e);
-    }).catch((err) => {
-      reject("no results returned");
+      include: [
+        {
+          model: Department,
+          required: true,
+        },
+      ],
     })
+      .then((employees) => {
+        const e = employees.map((employee) => {
+          return employee.dataValues;
+        });
+        resolve(e);
+      })
+      .catch((err) => {
+        reject("no results returned");
+      });
   });
 };
 
@@ -150,20 +162,24 @@ module.exports.getEmployeesByDepartment = function (department) {
   return new Promise(function (resolve, reject) {
     Employee.findAll({
       where: {
-        DepartmentDepartmentId: department
+        DepartmentDepartmentId: department,
       },
-      include: [{
-        model: Department,
-        required: true
-      }]
-    }).then((employees) => {
-      const e = employees.map(employee => {
-        return employee.dataValues
-      });
-      resolve(e);
-    }).catch(() => {
-      reject("no results returned");
+      include: [
+        {
+          model: Department,
+          required: true,
+        },
+      ],
     })
+      .then((employees) => {
+        const e = employees.map((employee) => {
+          return employee.dataValues;
+        });
+        resolve(e);
+      })
+      .catch(() => {
+        reject("no results returned");
+      });
   });
 };
 
@@ -171,20 +187,24 @@ module.exports.getEmployeesByManager = function (employeeManagerNum) {
   return new Promise(function (resolve, reject) {
     Employee.findAll({
       where: {
-        employeeManagerNum: employeeManagerNum
+        employeeManagerNum: employeeManagerNum,
       },
-      include: [{
-        model: Department,
-        required: true
-      }]
-    }).then((employees) => {
-      const e = employees.map(employee => {
-        return employee.dataValues
-      });
-      resolve(e);
-    }).catch(() => {
-      reject("no results returned");
+      include: [
+        {
+          model: Department,
+          required: true,
+        },
+      ],
     })
+      .then((employees) => {
+        const e = employees.map((employee) => {
+          return employee.dataValues;
+        });
+        resolve(e);
+      })
+      .catch(() => {
+        reject("no results returned");
+      });
   });
 };
 
@@ -192,35 +212,41 @@ module.exports.getEmployeeByNum = function (employeeNum) {
   return new Promise(function (resolve, reject) {
     Employee.findAll({
       where: {
-        employeeNum: employeeNum
-      }
-    }).then((employees) => {
-      const e = employees.map(employee => {
-        return employee.dataValues
-      });
-      resolve(e);
-    }).catch(() => {
-      reject("no results returned");
+        employeeNum: employeeNum,
+      },
     })
+      .then((employees) => {
+        const e = employees.map((employee) => {
+          return employee.dataValues;
+        });
+        resolve(e);
+      })
+      .catch(() => {
+        reject("no results returned");
+      });
   });
 };
 
 module.exports.updateEmployee = function (employeeData) {
   return new Promise(function (resolve, reject) {
-    employeeData.isManager = (employeeData.isManager) ? true : false;
+    employeeData.isManager = employeeData.isManager ? true : false;
     for (const key in employeeData) {
       if (employeeData[key] === "") {
         employeeData[key] = null;
       }
     }
-    Employee.update({
-      ...employeeData
-    }, {
-      where: { employeeNum: employeeData.employeeNum }
-    })
+    Employee.update(
+      {
+        ...employeeData,
+      },
+      {
+        where: { employeeNum: employeeData.employeeNum },
+      }
+    )
       .then((result) => {
         resolve(result);
-      }).catch(() => {
+      })
+      .catch(() => {
         reject("unable to update employee");
       });
   });
@@ -230,13 +256,15 @@ module.exports.deleteEmployeeByNum = function (id) {
   return new Promise(function (resolve, reject) {
     Employee.destroy({
       where: {
-        employeeNum: id
-      }
-    }).then(() => {
-      resolve("destroyed");
-    }).catch((e) => {
-      reject("was rejected");
+        employeeNum: id,
+      },
     })
+      .then(() => {
+        resolve("destroyed");
+      })
+      .catch((e) => {
+        reject("was rejected");
+      });
   });
 };
 
@@ -245,14 +273,16 @@ module.exports.deleteEmployeeByNum = function (id) {
 /***********************************************/
 module.exports.getDepartments = function () {
   return new Promise(function (resolve, reject) {
-    Department.findAll().then((departments) => {
-      const departs = departments.map(department => {
-        return department.dataValues
+    Department.findAll()
+      .then((departments) => {
+        const departs = departments.map((department) => {
+          return department.dataValues;
+        });
+        resolve(departs);
+      })
+      .catch(() => {
+        reject("no results returned");
       });
-      resolve(departs);
-    }).catch(() => {
-      reject("no results returned");
-    })
   });
 };
 
@@ -266,7 +296,8 @@ module.exports.addDepartment = function (departmentData) {
     Department.create({ ...departmentData })
       .then((result) => {
         resolve(result);
-      }).catch(() => {
+      })
+      .catch(() => {
         reject("unable to create department");
       });
   });
@@ -279,14 +310,18 @@ module.exports.updateDepartment = function (departmentData) {
         departmentData[key] = null;
       }
     }
-    Department.update({
-      ...departmentData
-    }, {
-      where: { departmentId: departmentData.departmentId }
-    })
+    Department.update(
+      {
+        ...departmentData,
+      },
+      {
+        where: { departmentId: departmentData.departmentId },
+      }
+    )
       .then((result) => {
         resolve(result);
-      }).catch((e) => {
+      })
+      .catch((e) => {
         reject("unable to update department");
       });
   });
@@ -296,16 +331,18 @@ module.exports.getDepartmentById = function (id) {
   return new Promise(function (resolve, reject) {
     Department.findAll({
       where: {
-        departmentId: id
-      }
-    }).then((departments) => {
-      const e = departments.map(department => {
-        return department.dataValues
-      });
-      resolve(e);
-    }).catch(() => {
-      reject("no results returned");
+        departmentId: id,
+      },
     })
+      .then((departments) => {
+        const e = departments.map((department) => {
+          return department.dataValues;
+        });
+        resolve(e);
+      })
+      .catch(() => {
+        reject("no results returned");
+      });
   });
 };
 
@@ -313,12 +350,14 @@ module.exports.deleteDepartmentById = function (id) {
   return new Promise(function (resolve, reject) {
     Department.destroy({
       where: {
-        departmentId: id
-      }
-    }).then(() => {
-      resolve("destroyed");
-    }).catch((e) => {
-      reject("was rejected");
+        departmentId: id,
+      },
     })
+      .then(() => {
+        resolve("destroyed");
+      })
+      .catch((e) => {
+        reject("was rejected");
+      });
   });
 };

@@ -1,11 +1,8 @@
 var mongoose = require("mongoose");
-const { mapFinderOptions } = require("sequelize/types/lib/utils");
+//const { mapFinderOptions } = require("sequelize/types/lib/utils");
 var Schema = mongoose.Schema;
 var userSchema = new Schema({
-  userName: {
-    type: Sequelize.String,
-    primaryKey: true,
-  },
+  userName: String,
   password: String,
   email: String,
   loginHistory: {
@@ -19,7 +16,9 @@ let User; // to be defined on new connection (see initialize)
 
 module.exports.initialize = function () {
   return new Promise(function (resolve, reject) {
-    let db = mongoose.createConnection("connectionString");
+    let db = mongoose.createConnection(
+      "mongodb+srv://igabrovsky:Stanford2002!@cluster0.ilpel.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+    );
     db.on("error", (err) => {
       reject(err); // reject the promise with the provided error
     });
