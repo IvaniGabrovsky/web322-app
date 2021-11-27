@@ -1,10 +1,10 @@
 /*********************************************************************************
- * WEB322 – Assignment 05
+ * WEB322 – Assignment 06
  * I declare that this assignment is my own work in accordance with Seneca Academic Policy. No part
  * of this assignment has been copied manually or electronically from any other source
  * (including 3rd party web sites) or distributed to other students.
  *
- * Name: Ivan Gabrovsky Student ID: 153658190 Date: Thu, Nov 17, 2021
+ * Name: Ivan Gabrovsky Student ID: 153658190 Date: Thu, Nov 22, 2021
  *
  * Online (Heroku) Link: https://git.heroku.com/rocky-sea-19016.git
  *
@@ -18,6 +18,7 @@ var multer = require("multer");
 var fs = require("fs");
 var path = require("path");
 var dataService = require("./data-service.js");
+var dataServiceAuth = require("data-service-auth.js");
 
 
 const HTTP_PORT = process.env.PORT || 8080;
@@ -26,7 +27,7 @@ const NO_RESULTS = { message: "no results" };
 
 app.engine(".hbs", exphbs({ extname: ".hbs" }));
 app.set("view engine", ".hbs");
-app.locals.title = "Assignment 5";
+app.locals.title = "Assignment 6";
 
 // call this function after the http server starts listening for requests
 function onHttpStart() {
