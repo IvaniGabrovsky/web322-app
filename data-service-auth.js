@@ -82,9 +82,26 @@ module.exports.checkUser = function (userData) {
             });
         }
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
         reject(`Unable to find user: ${userData.userName}`);
+      });
+  });
+};
+
+module.exports.getUser = function (userName) {
+  return new Promise(function (resolve, reject) {
+    User.find({ userName: userName })
+      .exec()
+      .then((users) => {
+        usersObj = users.map((value) => value.toObject());
+        if (usersObj.length === 0) {
+          reject(`Unable to find user: ${userName}`);
+        } else {
+          resolve(usersObj[0]);
+        }
+      })
+      .catch(() => {
+        reject(`Unable to find user: ${userName}`);
       });
   });
 };

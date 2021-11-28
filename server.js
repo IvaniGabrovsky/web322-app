@@ -442,7 +442,21 @@ app.get("/logout", function (req, res) {
 });
 
 app.get("/userHistory", ensureLogin, function (req, res) {
-  res.render("userHistory", { userHistory: req.session.user });
+  dataServiceAuth
+    .getUser(req.session.user.userName)
+    .then((user) => {
+      res.render("userHistory", {
+        userHistory: user.loginHistory,
+        userName: user.userName,
+        email: user.email,
+      });
+    })
+    .catch((err) => {
+      res.render("userHistory", {
+        errorMessage: err,
+        userName: req.session.user.userName,
+      });
+    });
 });
 
 //**************************************************************************************/
