@@ -1,6 +1,5 @@
 var mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
-//const { mapFinderOptions } = require("sequelize/types/lib/utils");
 var Schema = mongoose.Schema;
 var userSchema = new Schema({
   userName: String,

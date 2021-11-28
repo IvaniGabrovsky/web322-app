@@ -75,8 +75,7 @@ var Employee = sequelize.define(
     isManager: Sequelize.BOOLEAN,
     employeeManagerNum: Sequelize.INTEGER,
     status: Sequelize.STRING,
-    hireDate: Sequelize.STRING, // ,
-    // departmentId: Sequelize.INTEGER
+    hireDate: Sequelize.STRING,
   },
   {
     createdAt: false, // disable createdAt
