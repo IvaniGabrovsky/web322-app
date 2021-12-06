@@ -39,13 +39,16 @@ db.people.find({"age": null })
 db.food.find({ fruit: { $all: ["apple", "banana"] } })
 // $size
 db.food.find({"fruit" : {"$size" : 3}})
-// $inc
 
 // Embedded documents
 db.user.find({ "name": { "first": "Joe", "last": "Schmoe" } })
 db.user.find({ "name.first": "Joe", "name.last": "Schmoe" })
 
+db.blog.insert({ _id: 1,  title: "My Blog", user: "Peter", post: { name: "Test 1", comments: ["Gret", "Good post", "Nice"]} })
+db.blog.findOne({ _id: 1 })
+db.blog.findOne({"post.name": "Test 1"})
 db.blog.find({ "comments": { "$elemMatch": { "author": "joe", "score": { "$gte": 5 } } } })
+db.blog.update({ "post.name": "Test 1" },  { "$set": { "post.author": "George" } })
 
 // ****** Update ******
 db.people.replaceOne({ "name" : "Peter"},
@@ -56,6 +59,7 @@ peter.relationships = { "friends": peter.friends, "enemies": peter.enemies };
 db.people.replaceOne({ "name": "Peter" }, peter);
 // $inc
 db.people.update({ "name": "Peter" }, { "$inc": { "age": 1 } });
+db.sales.update({ _id: 1 }, {"$inc": { "price": 1 }})
 // $set
 db.people.update({ "name": "George" }, { "$set": { "book": "War and Peace" } });
 // $unset
@@ -74,15 +78,14 @@ db.array.update({ "froot": "apple" }, {
   }
 })
 // $sort
-db.array.update({ "froot": "apple" }, {
-  "$push": {
-    "prices": {
-      "$each": [5, 2, 3, 4],
-      "$slice": -10,
-      "$sort": { "prices": -1}
-    }
-  }
-})
+db.people.aggregate(
+    [ { $sort : { name : 1 } } ]
+);
+db.array.aggregate(
+  [
+    { $sort : { prices : 1 } }
+  ]
+)
 // $addToSet
 db.array.update({ "froot": "apple" }, { "$addToSet": { "prices": 12 } })
 // Aggregation
@@ -172,7 +175,13 @@ db.people.aggregate([{
   }
 }])
 // $first/$last
-
+db.people.aggregate([{
+  "$group": {
+    "_id": { "name": "$name" },
+    "firstAge": { "$first": "$age" },
+    "lastAge": { "$last": "$age" }
+  }
+}])
 // limit
 db.people.find().limit(3)
 // skip
